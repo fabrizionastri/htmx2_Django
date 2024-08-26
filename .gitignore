@@ -1,5 +1,5 @@
 .venv
 .git
 db.sqlite3
-__*
+__pycache__/
 *.pyc
