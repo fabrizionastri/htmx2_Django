@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTMX Tax Calculator</title>
+  </head>
+  <body>
+    <h1>Tax Calculator</h1>
+
+    <form>
+      <label for="price_excl_tax">Price Excluding Tax:</label>
+      <input type="number" id="price_excl_tax" name="price_excl_tax" step="0.01" required />
+      <br /><br />
+
+      <label for="tax_rate">Tax Rate (%):</label>
+      <input type="number" id="tax_rate" name="tax_rate" step="0.01" required />
+      <br /><br />
+
+      <label for="price_incl_tax">Price Including Tax:</label>
+      <input type="number" id="price_incl_tax" name="price_incl_tax" step="0.01" required />
+    </form>
+
+    <script>
+      document.addEventListener('input', event => {
+        const form = event.target.closest('form')
+        const formData = new FormData(form)
+
+        const priceExclTax = parseFloat(formData.get('price_excl_tax'))
+        const taxRate = parseFloat(formData.get('tax_rate'))
+        const priceInclTax = parseFloat(formData.get('price_incl_tax'))
+
+        if (event.target.id === 'price_excl_tax' || event.target.id === 'tax_rate') {
+          if (!isNaN(priceExclTax) && !isNaN(taxRate)) {
+            const calculatedInclTax = priceExclTax * (1 + taxRate / 100)
+            document.getElementById('price_incl_tax').value = calculatedInclTax.toFixed(2)
+          }
+        } else if (event.target.id === 'price_incl_tax') {
+          if (!isNaN(priceInclTax) && !isNaN(taxRate)) {
+            const calculatedExclTax = priceInclTax / (1 + (taxRate || 0) / 100)
+            document.getElementById('price_excl_tax').value = calculatedExclTax.toFixed(2)
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
