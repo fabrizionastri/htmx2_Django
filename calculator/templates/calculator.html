@@ -9,35 +9,23 @@
   <body>
     <h1>Tax Calculator</h1>
 
-    <form>
+    <form hx-trigger="change" hx-post="calculate/">
       <label for="price_excl_tax">Price Excluding Tax:</label>
       <input
         type="number"
         id="price_excl_tax"
         name="price_excl_tax"
+        value="{{ price_excl_tax }}"
         step="0.01"
-        required
-        hx-get="http://127.0.0.1:8000/calculator/calculate/"
-        hx-trigger="input from:#tax_rate"
-        hx-target="#price_incl_tax"
-        hx-params="serialize" />
+        required />
       <br /><br />
 
       <label for="tax_rate">Tax Rate (%):</label>
-      <input
-        type="number"
-        id="tax_rate"
-        name="tax_rate"
-        step="0.01"
-        required
-        hx-get="http://127.0.0.1:8000/calculator/calculate/"
-        hx-trigger="input from:#price_excl_tax"
-        hx-target="#price_incl_tax"
-        hx-params="serialize" />
+      <input type="number" id="tax_rate" name="tax_rate" value="{{ tax_rate }}" step="0.01" required />
       <br /><br />
 
       <label for="price_incl_tax">Price Including Tax:</label>
-      <input type="text" id="price_incl_tax" readonly />
+      <input type="number" id="price_incl_tax" name="price_incl_tax" value="{{ price_incl_tax }}" readonly />
     </form>
   </body>
 </html>

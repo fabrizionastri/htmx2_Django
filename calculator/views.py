@@ -1,13 +1,24 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.template.response import TemplateResponse
 
 
-def calculate_price_incl_tax(request):
-    price_excl_tax = float(request.GET.get("price_excl_tax", 0))
-    tax_rate = float(request.GET.get("tax_rate", 0))
-    price_incl_tax = price_excl_tax * (1 + tax_rate / 100)
-    return JsonResponse({"price_incl_tax": price_incl_tax})
+def format_parameters(params):
+    for q in ["price_excl_tax", "price_incl_tax", "tax_rate"]:
+        params[q] = float(params[q])
+    return params
 
 
 def calculator_view(request):
-    return render(request, "calculator.html")
+    if request.method == "POST":
+        params = format_parameters(request.POST)
+        updated_input = params["updated_input"]
+        if updated_input == "price_excl_tax" or updated_input == "tax_rate":
+            params["price_incl_tax"] = params["price_excl_tax"] * (
+                1 + params["tax_rate"] / 100
+            )
+        elif updated_input == "price_incl_tax":
+            params["price_excl_tax"] = params["price_incl_tax"] / (
+                1 + params["tax_rate"] / 100
+            )
+
+    return TemplateResponse(request, "calculator.html", params)
